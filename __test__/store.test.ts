@@ -8,6 +8,9 @@ describe('store', () => {
     store
       .select((state) => state.counter)
       .subscribe((counter) => console.log(counter));
+    store.effectOn('increment').subscribe((state, action, dispatch) => {
+      dispatch(decrement());
+    });
   });
   afterEach(() => {
     store.clean();
@@ -17,7 +20,7 @@ describe('store', () => {
   });
   it('increment', () => {
     store.dispatch(increment(23));
-    expect(store.getState()).toEqual({ counter: 23 });
+    expect(store.getState()).toEqual({ counter: 22 });
   });
   it('decrement', () => {
     store.dispatch(decrement());

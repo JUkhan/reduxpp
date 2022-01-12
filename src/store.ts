@@ -86,7 +86,13 @@ export class Store<State = any> {
   }
   effectOn(...actionTypes: string[]) {
     return {
-      subscribe: (callback: any) => {
+      subscribe: (
+        callback: (
+          state: State,
+          action: AnyAction,
+          dispatch: (acion: AnyAction) => void
+        ) => void
+      ) => {
         return this.subscribeForEffect(actionTypes, callback);
       },
     };
