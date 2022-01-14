@@ -8,9 +8,10 @@ describe('store', () => {
     store
       .select((state) => state.counter)
       .subscribe((counter) => console.log(counter));
-    store.effectOn('increment').subscribe((state, action, dispatch) => {
-      dispatch(decrement());
-    });
+
+    // store.effectOn('increment').subscribe((state, action, dispatch) => {
+    //   dispatch(decrement());
+    // });
   });
   afterEach(() => {
     store.clean();

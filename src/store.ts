@@ -10,7 +10,11 @@ export class Store<State = any> {
     this.state = initialState;
     this.reducers.forEach((reducer) => {
       this.state[reducer.name] = reducer.initialState;
+      Object.keys(reducer.efffecs).forEach((efffect) => {
+        this.subscribeForEffect(efffect.split('$'), reducer.efffecs[efffect]);
+      });
     });
+
     this.dispatch({ type: '@INIT' });
   }
   getState() {
@@ -71,8 +75,10 @@ export class Store<State = any> {
     let key = Number(new Date()).toString() + Math.random();
     let notifyCallback = (action: AnyAction) => {
       if (actionTypes.includes(action.type)) {
-        callback(this.getState(), action, (newAction: AnyAction) =>
-          this.dispatch(newAction)
+        callback(
+          () => this.getState(),
+          action,
+          (newAction: AnyAction) => this.dispatch(newAction)
         );
       }
     };
@@ -88,7 +94,7 @@ export class Store<State = any> {
     return {
       subscribe: (
         callback: (
-          state: State,
+          getState: () => State,
           action: AnyAction,
           dispatch: (acion: AnyAction) => void
         ) => void

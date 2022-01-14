@@ -55,7 +55,15 @@ type ActionCreatorForReducer<R> = R extends (
 export type ReducerActions<Reducers extends ReducerMetods<any>> = {
   [Type in keyof Reducers]: ActionCreatorForReducer<Reducers[Type]>;
 };
+export type Efectype<A extends Action = Action> = (
+  getState: () => any,
+  Action: A,
+  dispatch: (action: A) => void
+) => void;
 
+export type EfffectOptioons = {
+  [key: string]: Efectype;
+};
 export interface ReducerOptions<
   State = any,
   R extends ReducerMetods<State> = ReducerMetods<State>,
@@ -64,6 +72,7 @@ export interface ReducerOptions<
   name: Name;
   initialState: State;
   reducers: ValidateReducers<State, R>;
+  efffecs?: EfffectOptioons;
 }
 export interface CreateReducer<
   State = any,
@@ -74,4 +83,5 @@ export interface CreateReducer<
   initialState: State;
   reducers: ValidateReducers<State, R>;
   actions: ReducerActions<R>;
+  efffecs: EfffectOptioons;
 }
