@@ -17,7 +17,7 @@ export class Store<State = any> {
 
     this.dispatch({ type: '@INIT' });
   }
-  getState() {
+  getState(): State {
     return this.state;
   }
 
