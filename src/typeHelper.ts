@@ -3,7 +3,7 @@ export interface AnyAction extends Action {
   [extraProps: string]: any;
 }
 export type Reducer<S = any, A extends Action = AnyAction> = (
-  state: S | undefined,
+  state: S,
   action: A
 ) => S;
 

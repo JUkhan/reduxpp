@@ -1,5 +1,5 @@
 import { AnyAction } from './../dist/typeHelper.d';
-import { createAction, createReducer } from '../src';
+import { createReducer } from '../src';
 import { PayloadAction } from '../src/typeHelper';
 
 export const counterReducer = createReducer({
@@ -20,6 +20,5 @@ export const counterReducer = createReducer({
     },
   },
 });
-var add = createAction<void>('add');
-console.log(add());
+
 export const { increment, decrement } = counterReducer.actions;
