@@ -1,6 +1,6 @@
 # reduxpp
 
-Developed redux pattern different way so that developer life is easy, easy async state change, select, subscribe, unsubscribe
+Developed redux pattern different way so that developer life is easy, easy async state change, select, subscribe, unsubscribe [React Demo](https://stackblitz.com/edit/reduxpp-react-demo?file=index.tsx)
 
 ```ts
 import { createReducer, AnyAction, PayloadAction } from 'reduxpp';
