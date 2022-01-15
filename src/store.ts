@@ -1,4 +1,5 @@
 import { CreateReducer, AnyAction } from './typeHelper';
+import equal from './shallowEqual';
 
 export class Store<State = any> {
   private reducers: CreateReducer[];
@@ -30,7 +31,7 @@ export class Store<State = any> {
     notifier(value);
     let notifyCallback = () => {
       const newValue = selector(this.state);
-      if (value !== newValue) {
+      if (!equal(value, newValue)) {
         notifier(newValue);
         value = newValue;
       }

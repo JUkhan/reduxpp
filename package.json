@@ -1,6 +1,6 @@
 {
   "name": "reduxpp",
-  "version": "1.1.0",
+  "version": "1.4.0",
   "description": "Developed redux pattern different way so that developer life is easy, easy async state change, select, subscribe, unsubscribe",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
