@@ -1,5 +1,5 @@
 import { CreateReducer, AnyAction } from './typeHelper';
-import equal from './shallowEqual';
+import { shallowEqual as equal } from './shallowEqual';
 
 export class Store<State = any> {
   private reducers: CreateReducer[];
