@@ -11,8 +11,8 @@ export class Store<State = any> {
     this.state = initialState;
     this.reducers.forEach((reducer) => {
       this.state[reducer.name] = reducer.initialState;
-      Object.keys(reducer.efffecs).forEach((efffect) => {
-        this.subscribeForEffect(efffect.split('$'), reducer.efffecs[efffect]);
+      Object.keys(reducer.effects).forEach((efffect) => {
+        this.subscribeForEffect(efffect.split('$'), reducer.effects[efffect]);
       });
     });
 

@@ -72,7 +72,7 @@ export interface ReducerOptions<
   name: Name;
   initialState: State;
   reducers: ValidateReducers<State, R>;
-  efffecs?: EfffectOptioons;
+  effects?: EfffectOptioons;
 }
 export interface CreateReducer<
   State = any,
@@ -83,5 +83,5 @@ export interface CreateReducer<
   initialState: State;
   reducers: ValidateReducers<State, R>;
   actions: ReducerActions<R>;
-  efffecs: EfffectOptioons;
+  effects: EfffectOptioons;
 }

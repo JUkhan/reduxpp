@@ -12,7 +12,7 @@ export function createReducer<
 
   const reducers: any = options.reducers || {};
   const actions: any = {};
-  const efffecs: any = options.efffecs || {};
+  const effects: any = options.effects || {};
   Object.keys(reducers).map((key) => {
     actions[key] = createAction(key);
   });
@@ -22,6 +22,6 @@ export function createReducer<
     initialState: options.initialState,
     actions: actions as any,
     reducers,
-    efffecs,
+    effects,
   };
 }

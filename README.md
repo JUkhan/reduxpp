@@ -16,7 +16,7 @@ export const counterReducer = createReducer({
       return state - 1;
     },
   },
-  efffecs: {
+  effects: {
     async increment(state, action: AnyAction, dispatch) {
       console.log(state(), action, dispatch);
       dispatch(decrement());
