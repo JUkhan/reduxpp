@@ -24,14 +24,15 @@ export class Store<State = any> {
 
   subscribe<T = any>(
     selector: (state: State) => T,
-    notifier: (value: T) => void
+    notifier: (value: T) => void,
+    equalityFn?: (left: T, right: T) => boolean
   ) {
     let key = Number(new Date()).toString() + Math.random();
     let value = selector(this.state);
     notifier(value);
     let notifyCallback = () => {
       const newValue = selector(this.state);
-      if (!equal(value, newValue)) {
+      if (!(equalityFn || equal)(value, newValue)) {
         notifier(newValue);
         value = newValue;
       }
@@ -44,10 +45,13 @@ export class Store<State = any> {
       },
     };
   }
-  select<T = any>(selectCallback: (state: State) => T) {
+  select<T = any>(
+    selector: (state: State) => T,
+    equalityFn?: (left: T, right: T) => boolean
+  ) {
     return {
-      subscribe: (scb: (value: T) => void) => {
-        return this.subscribe(selectCallback, scb);
+      subscribe: (outputFn: (value: T) => void) => {
+        return this.subscribe(selector, outputFn, equalityFn);
       },
     };
   }
