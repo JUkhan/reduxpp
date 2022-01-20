@@ -12,7 +12,7 @@ export class Store<State = any> {
     this.reducers.forEach((reducer) => {
       this.state[reducer.name] = reducer.initialState;
       Object.keys(reducer.effects).forEach((efffect) => {
-        this.subscribeForEffect(efffect.split('$'), reducer.effects[efffect]);
+        this.subscribeForEffect([efffect], reducer.effects[efffect]);
       });
     });
 
@@ -82,8 +82,8 @@ export class Store<State = any> {
       if (actionTypes.includes(action.type)) {
         callback(
           () => this.getState(),
-          action,
-          (newAction: AnyAction) => this.dispatch(newAction)
+          (newAction: AnyAction) => this.dispatch(newAction),
+          action
         );
       }
     };

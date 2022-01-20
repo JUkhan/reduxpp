@@ -57,8 +57,8 @@ export type ReducerActions<Reducers extends ReducerMetods<any>> = {
 };
 export type Efectype<A extends Action = Action> = (
   getState: () => any,
-  Action: A,
-  dispatch: (action: A) => void
+  dispatch: (action: A) => void,
+  Action: A
 ) => void;
 
 export type EfffectOptioons = {
@@ -67,21 +67,60 @@ export type EfffectOptioons = {
 export interface ReducerOptions<
   State = any,
   R extends ReducerMetods<State> = ReducerMetods<State>,
+  M extends EffectHandlers = EffectHandlers,
   Name extends string = string
 > {
   name: Name;
   initialState: State;
   reducers: ValidateReducers<State, R>;
-  effects?: EfffectOptioons;
+  effects?: ValidateHandlers<M>;
 }
 export interface CreateReducer<
   State = any,
   R extends ReducerMetods<State> = ReducerMetods<State>,
+  M extends EffectHandlers = EffectHandlers,
   Name extends string = string
 > {
   name: Name;
   initialState: State;
   reducers: ValidateReducers<State, R>;
-  actions: ReducerActions<R>;
+  actions: ReducerActions<R> & EffectActions<M>;
   effects: EfffectOptioons;
 }
+
+export type EffectHandler<A extends Action = AnyAction> = (
+  getState: () => any,
+  dispatch: (action: AnyAction) => void,
+  action: A
+) => void;
+
+export type EffectHandlers = {
+  [K: string]: EffectHandler<PayloadAction<any>>;
+};
+
+export type ValidateHandlers<ACR extends EffectHandlers> = ACR & {
+  [T in keyof ACR]: ACR[T] extends {
+    handler(
+      getState: () => any,
+      dispatch: (action: AnyAction) => void,
+      action?: infer A
+    ): void;
+  }
+    ? {
+        prepare(...a: never[]): Omit<A, 'type'>;
+      }
+    : {};
+};
+type ActionCreatorForEffect<R> = R extends (
+  getState: () => any,
+  dispatch: (action: AnyAction) => void,
+  action: infer Action
+) => any
+  ? Action extends { payload: infer P }
+    ? ActionCreatorWithPayload<P>
+    : ActionCreatorWithoutPayload
+  : ActionCreatorWithoutPayload;
+
+export type EffectActions<Reducers extends EffectHandlers> = {
+  [Type in keyof Reducers]: ActionCreatorForEffect<Reducers[Type]>;
+};

@@ -14,11 +14,20 @@ export const counterReducer = createReducer({
     },
   },
   effects: {
-    async increment(state, action: AnyAction, dispatch) {
-      console.log(state(), action, dispatch);
+    async increment(state, dispatch, action: PayloadAction<number>) {
+      console.log(state(), dispatch, action);
       dispatch(decrement());
+      dispatch(doSomething({ name: 'test', age: 10 }));
+    },
+    doSomething(
+      state,
+      dispatch,
+      action: PayloadAction<{ name: string; age: number }>
+    ) {
+      console.log(state(), dispatch, action);
+      //dispatch(decrement());
     },
   },
 });
 
-export const { increment, decrement } = counterReducer.actions;
+export const { increment, decrement, doSomething } = counterReducer.actions;
