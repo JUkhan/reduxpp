@@ -55,14 +55,9 @@ type ActionCreatorForReducer<R> = R extends (
 export type ReducerActions<Reducers extends ReducerMetods<any>> = {
   [Type in keyof Reducers]: ActionCreatorForReducer<Reducers[Type]>;
 };
-export type Efectype<A extends Action = Action> = (
-  getState: () => any,
-  dispatch: (action: A) => void,
-  Action: A
-) => void;
 
 export type EfffectOptioons = {
-  [key: string]: Efectype;
+  [key: string]: EffectHandler;
 };
 export interface ReducerOptions<
   State = any,

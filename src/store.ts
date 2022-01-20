@@ -1,4 +1,4 @@
-import { CreateReducer, AnyAction } from './typeHelper';
+import { CreateReducer, AnyAction, EffectHandler } from './typeHelper';
 import { shallowEqual as equal } from './shallowEqual';
 
 export class Store<State = any> {
@@ -76,7 +76,7 @@ export class Store<State = any> {
     this.effectMap.forEach((cal) => cal(action));
   }
 
-  private subscribeForEffect(actionTypes: string[], callback: any) {
+  private subscribeForEffect(actionTypes: string[], callback: EffectHandler) {
     let key = Number(new Date()).toString() + Math.random();
     let notifyCallback = (action: AnyAction) => {
       if (actionTypes.includes(action.type)) {
@@ -97,13 +97,7 @@ export class Store<State = any> {
   }
   effectOn(...actionTypes: string[]) {
     return {
-      subscribe: (
-        callback: (
-          getState: () => State,
-          action: AnyAction,
-          dispatch: (acion: AnyAction) => void
-        ) => void
-      ) => {
+      subscribe: (callback: EffectHandler) => {
         return this.subscribeForEffect(actionTypes, callback);
       },
     };
