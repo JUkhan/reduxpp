@@ -1,9 +1,14 @@
-import { CreateReducer } from './typeHelper';
+import {
+  Action,
+  AnyAction,
+  CombinedState,
+  ReducersMapObject,
+} from './typeHelper';
 import { Store } from './store';
 
-export function createStore<State = any>(
-  reducers: CreateReducer[],
+export function createStore<S, A extends Action = AnyAction>(
+  reducers: ReducersMapObject<S, A>,
   initialState = {}
-): Store<State> {
-  return new Store<State>(reducers, initialState);
+): Store<CombinedState<S>> {
+  return new Store<CombinedState<S>>(reducers as any, initialState);
 }

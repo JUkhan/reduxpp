@@ -1,22 +1,25 @@
-import { CreateReducer, AnyAction, EffectHandler } from './typeHelper';
+import { AnyAction, EffectHandler, ReducersMapObject } from './typeHelper';
 import { shallowEqual as equal } from './shallowEqual';
 
 export class Store<State = any> {
-  private reducers: CreateReducer[];
+  private reducers: ReducersMapObject;
   private state = {} as any;
   private map = new Map<string, any>();
   private effectMap = new Map<string, any>();
-  constructor(reducers: CreateReducer[], initialState: any) {
+  constructor(reducers: ReducersMapObject, initialState: any) {
     this.reducers = reducers;
     this.state = initialState;
-    this.reducers.forEach((reducer) => {
-      this.state[reducer.name] = reducer.initialState;
+    for (let key in reducers) {
+      const reducer: any = reducers[key];
+      if (!this.state[key]) {
+        this.state[key] = reducer.initialState;
+      }
       Object.keys(reducer.effects).forEach((efffect) => {
         this.subscribeForEffect([efffect], reducer.effects[efffect]);
       });
-    });
+    }
 
-    this.dispatch({ type: '@INIT' });
+    this.dispatch({ type: '$INIT' });
   }
   getState(): State {
     return this.state;
@@ -57,17 +60,14 @@ export class Store<State = any> {
   }
 
   dispatch(action: AnyAction) {
-    if (!action) return;
-    if (typeof action.type === 'undefined') return;
+    if (!action || !action.type) return;
+
     let hasChanged = false;
     const nextState = {} as any;
-    for (let reducer of this.reducers) {
-      const key = reducer.name;
+    for (let key in this.reducers) {
       const previousStateForKey = this.state[key];
-      const nextStateForKey =
-        typeof reducer.reducers[action.type] === 'function'
-          ? reducer.reducers[action.type](previousStateForKey, action as any)
-          : previousStateForKey;
+      const nextStateForKey = this.reducers[key](previousStateForKey, action);
+
       nextState[key] = nextStateForKey;
       hasChanged = hasChanged || previousStateForKey !== nextStateForKey;
     }
@@ -76,13 +76,13 @@ export class Store<State = any> {
     this.effectMap.forEach((cal) => cal(action));
   }
 
-  private subscribeForEffect(actionTypes: string[], callback: EffectHandler) {
+  subscribeForEffect(actionTypes: string[], callback: EffectHandler) {
     let key = Number(new Date()).toString() + Math.random();
     let notifyCallback = (action: AnyAction) => {
       if (actionTypes.includes(action.type)) {
         callback(
-          () => this.getState(),
           (newAction: AnyAction) => this.dispatch(newAction),
+          () => this.getState(),
           action
         );
       }
@@ -105,7 +105,7 @@ export class Store<State = any> {
   clean() {
     this.map.clear();
     this.effectMap.clear();
-    this.reducers = [];
+    this.reducers = {};
     this.state = {};
   }
 }

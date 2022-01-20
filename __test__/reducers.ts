@@ -2,7 +2,7 @@ import { AnyAction } from './../dist/typeHelper.d';
 import { createReducer } from '../src';
 import { PayloadAction } from '../src/typeHelper';
 
-export const counterReducer = createReducer({
+export const counterSlice = createReducer({
   name: 'counter',
   initialState: 0,
   reducers: {
@@ -14,20 +14,23 @@ export const counterReducer = createReducer({
     },
   },
   effects: {
-    async increment(state, dispatch, action: PayloadAction<number>) {
+    async counter_increment(dispatch, state, action: PayloadAction<number>) {
       console.log(state(), dispatch, action);
       dispatch(decrement());
       dispatch(doSomething({ name: 'test', age: 10 }));
     },
     doSomething(
-      state,
       dispatch,
+      state,
       action: PayloadAction<{ name: string; age: number }>
     ) {
       console.log(state(), dispatch, action);
       //dispatch(decrement());
     },
+    $INIT(dispatch, state, action: AnyAction) {
+      console.log('$INIT', state(), dispatch, action);
+    },
   },
 });
 
-export const { increment, decrement, doSomething } = counterReducer.actions;
+export const { increment, decrement, doSomething, counter_increment } = counterSlice.actions;

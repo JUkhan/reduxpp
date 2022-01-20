@@ -1,17 +1,27 @@
-import { counterReducer, increment, decrement } from './reducers';
+import { counterSlice, increment, decrement } from './reducers';
 import { createStore, Store } from '../src';
 
 describe('store', () => {
   var store: Store<{ counter: number }>;
   beforeEach(() => {
-    store = createStore([counterReducer]);
+    store = createStore({
+      [counterSlice.name]: counterSlice.reducer,
+    });
+
     store
       .select((state) => state.counter)
       .subscribe((counter) => console.log(counter));
 
-    store.effectOn('increment').subscribe((state, dispatch, action) => {
-      console.log('effectOn action is working.....', state(), dispatch, action);
-    });
+    store
+      .effectOn(increment(null).type)
+      .subscribe((dispatch, state, action) => {
+        console.log(
+          'effectOn action is working.....',
+          dispatch,
+          state(),
+          action
+        );
+      });
   });
   afterEach(() => {
     store.clean();

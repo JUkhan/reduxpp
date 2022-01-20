@@ -77,15 +77,16 @@ export interface CreateReducer<
   Name extends string = string
 > {
   name: Name;
-  initialState: State;
-  reducers: ValidateReducers<State, R>;
+  //initialState: State;
+  //reducers: ValidateReducers<State, R>;
   actions: ReducerActions<R> & EffectActions<M>;
-  effects: EfffectOptioons;
+  //effects: EfffectOptioons;
+  reducer: Reducer<State, AnyAction>;
 }
 
 export type EffectHandler<A extends Action = AnyAction> = (
-  getState: () => any,
   dispatch: (action: AnyAction) => void,
+  getState: () => any,
   action: A
 ) => void;
 
@@ -96,8 +97,8 @@ export type EffectHandlers = {
 export type ValidateHandlers<ACR extends EffectHandlers> = ACR & {
   [T in keyof ACR]: ACR[T] extends {
     handler(
-      getState: () => any,
       dispatch: (action: AnyAction) => void,
+      getState: () => any,
       action?: infer A
     ): void;
   }
@@ -107,8 +108,8 @@ export type ValidateHandlers<ACR extends EffectHandlers> = ACR & {
     : {};
 };
 type ActionCreatorForEffect<R> = R extends (
-  getState: () => any,
   dispatch: (action: AnyAction) => void,
+  getState: () => any,
   action: infer Action
 ) => any
   ? Action extends { payload: infer P }
@@ -119,3 +120,14 @@ type ActionCreatorForEffect<R> = R extends (
 export type EffectActions<Reducers extends EffectHandlers> = {
   [Type in keyof Reducers]: ActionCreatorForEffect<Reducers[Type]>;
 };
+
+///////
+export type ReducersMapObject<S = any, A extends Action = Action> = {
+  [K in keyof S]: Reducer<S[K], A>;
+};
+declare const $CombinedState: unique symbol;
+
+interface EmptyObject {
+  readonly [$CombinedState]?: undefined;
+}
+export type CombinedState<S> = EmptyObject & S;
