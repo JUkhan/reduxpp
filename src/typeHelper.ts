@@ -77,10 +77,7 @@ export interface CreateReducer<
   Name extends string = string
 > {
   name: Name;
-  //initialState: State;
-  //reducers: ValidateReducers<State, R>;
   actions: ReducerActions<R> & EffectActions<M>;
-  //effects: EfffectOptioons;
   reducer: Reducer<State, AnyAction>;
 }
 

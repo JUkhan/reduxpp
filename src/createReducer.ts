@@ -6,6 +6,13 @@ import {
   EffectHandlers,
 } from './typeHelper';
 
+/**
+ * A function that accepts an initial state, an object full of reducer
+ * functions, and a "state name", and also it can have an object full of effect handlers, and automatically generates
+ * action creators and action types that correspond to the
+ * reducers and state and effects.
+ *
+ */
 export function createReducer<
   State,
   CR extends ReducerMetods<State>,
@@ -27,7 +34,7 @@ export function createReducer<
     }
     return state;
   }
-  reducer.effects = effects;
+
   reducer.initialState = options.initialState;
 
   Object.keys(reducers).map((key) => {
@@ -38,15 +45,14 @@ export function createReducer<
   });
 
   Object.keys(effects).map((key) => {
-    actions[key] = createAction(key);
+    const handler = effects[key];
+    actions[key] = (payload: any) => (dispatch: any, getState: any) =>
+      handler(dispatch, getState, { payload: payload });
   });
 
   return {
     name: options.name,
-    //initialState: options.initialState,
     actions,
-    //reducers,
-    //effects,
     reducer,
   };
 }

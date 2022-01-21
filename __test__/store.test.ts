@@ -1,4 +1,4 @@
-import { counterSlice, increment, decrement } from './reducers';
+import { counterSlice, increment, decrement, asyncInc } from './reducers';
 import { createStore, Store } from '../src';
 
 describe('store', () => {
@@ -31,10 +31,16 @@ describe('store', () => {
   });
   it('increment', () => {
     store.dispatch(increment(23));
-    expect(store.getState()).toEqual({ counter: 22 });
+    expect(store.getState()).toEqual({ counter: 23 });
   });
   it('decrement', () => {
     store.dispatch(decrement());
     expect(store.getState()).toEqual({ counter: -1 });
+  });
+  it('async increment', async () => {
+    store.dispatch(asyncInc('asyncInc in acion'));
+    expect(store.getState()).toEqual({ counter: 0 });
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(store.getState()).toEqual({ counter: 1 });
   });
 });

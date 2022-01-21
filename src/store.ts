@@ -14,9 +14,6 @@ export class Store<State = any> {
       if (!this.state[key]) {
         this.state[key] = reducer.initialState;
       }
-      Object.keys(reducer.effects).forEach((efffect) => {
-        this.subscribeForEffect([efffect], reducer.effects[efffect]);
-      });
     }
 
     this.dispatch({ type: '$INIT' });
@@ -59,9 +56,15 @@ export class Store<State = any> {
     };
   }
 
-  dispatch(action: AnyAction) {
-    if (!action || !action.type) return;
-
+  dispatch(action: AnyAction | any) {
+    if (!action) return;
+    if (typeof action === 'function') {
+      return action(
+        (a: any) => this.dispatch(a),
+        () => this.getState()
+      );
+    }
+    if (!action.type) return;
     let hasChanged = false;
     const nextState = {} as any;
     for (let key in this.reducers) {
