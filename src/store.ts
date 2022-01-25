@@ -1,5 +1,5 @@
 import { AnyAction, EffectHandler, ReducersMapObject } from './typeHelper';
-import { shallowEqual as equal } from './shallowEqual';
+import { shallowEqual } from './shallowEqual';
 
 export class Store<State = any> {
   private reducers: ReducersMapObject;
@@ -16,7 +16,7 @@ export class Store<State = any> {
       }
     }
 
-    this.dispatch({ type: '$INIT' });
+    this.dispatch({ type: '@@INIT' });
   }
   getState(): State {
     return this.state;
@@ -25,14 +25,14 @@ export class Store<State = any> {
   subscribe<T = any>(
     selector: (state: State) => T,
     notifier: (value: T) => void,
-    equalityFn?: (left: T, right: T) => boolean
+    equalityFn: (left: T, right: T) => boolean = shallowEqual
   ) {
     let key = Number(new Date()).toString() + Math.random();
     let value = selector(this.state);
     notifier(value);
     let notifyCallback = () => {
       const newValue = selector(this.state);
-      if (!(equalityFn || equal)(value, newValue)) {
+      if (!equalityFn(value, newValue)) {
         notifier(newValue);
         value = newValue;
       }

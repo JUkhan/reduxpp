@@ -1,8 +1,8 @@
 import { createAction } from './createAction';
 import {
-  CreateReducer,
+  CreateSlice,
   ReducerMetods,
-  ReducerOptions,
+  SliceOptions,
   EffectHandlers,
 } from './typeHelper';
 
@@ -13,14 +13,12 @@ import {
  * reducers and state and effects.
  *
  */
-export function createReducer<
+export function createSlice<
   State,
   CR extends ReducerMetods<State>,
   M extends EffectHandlers,
   Name extends string = string
->(
-  options: ReducerOptions<State, CR, M, Name>
-): CreateReducer<State, CR, M, Name> {
+>(options: SliceOptions<State, CR, M, Name>): CreateSlice<State, CR, M, Name> {
   if (!options.name) {
     throw new Error('`name` is a required option for reducer');
   }

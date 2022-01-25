@@ -1,7 +1,7 @@
-import { createReducer } from '../src';
+import { createSlice, createAction } from '../src';
 import { PayloadAction } from '../src/typeHelper';
 
-export const counterSlice = createReducer({
+export const counterSlice = createSlice({
   name: 'counter',
   initialState: 0,
   reducers: {

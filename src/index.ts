@@ -1,4 +1,4 @@
-export * from './createReducer';
+export * from './createSlice';
 export * from './createStore';
 export * from './store';
 export * from './createAction';

@@ -19,14 +19,14 @@ yarn add reduxpp reduxpp-react
 ## Create a Reduxpp State Reducer
 
 ```ts
-import { createReducer, PayloadAction } from 'reduxpp';
+import { createSlice, PayloadAction } from 'reduxpp';
 
 export interface CouterState {
   count: number;
   loading: boolean;
 }
 
-export const counterSlice = createReducer({
+export const counterSlice = createSlice({
   name: 'counter',
   initialState: { count: 0, loading: false },
   reducers: {
